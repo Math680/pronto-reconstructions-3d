@@ -73,7 +73,7 @@ def sous_echantillonner(points: np.ndarray) -> np.ndarray:
 
 def donnees_objet(nom_objet: str, avec_slider: bool, mr: np.ndarray, me: np.ndarray) -> dict:
     max_n = 8 if avec_slider else nombre_captures_disponibles(DOSSIER_CAPTURES / nom_objet, 8)
-    donnees = {}
+    donnees = {"points": {}, "counts": {}}
     for n in range(1, max_n + 1):
         points_plan = reconstruire_points("plan", n, mr, me)
         centre_plan, axes_plan, _ = ajuster_plan(points_plan)
@@ -85,13 +85,14 @@ def donnees_objet(nom_objet: str, avec_slider: bool, mr: np.ndarray, me: np.ndar
             points = passer_dans_repere_plan(points_bruts, centre_plan, axes_plan)
             points = points[points[:, 2] >= -TOLERANCE_SOUS_PLAN_MM]
 
+        donnees["counts"][str(n)] = int(len(points))
         points = sous_echantillonner(points)
-        donnees[str(n)] = np.round(points, 2).tolist()
+        donnees["points"][str(n)] = np.round(points, 2).tolist()
     return donnees
 
 
 def html_vue(titre: str, donnees: dict, avec_slider: bool, gradient_defaut: bool) -> str:
-    n_defaut = max(int(k) for k in donnees)
+    n_defaut = max(int(k) for k in donnees["points"])
     return f"""<!doctype html>
 <html lang="fr">
 <head>
@@ -140,12 +141,17 @@ const count = document.getElementById('count');
 const btnPlan = document.getElementById('togglePlan');
 const btnGradient = document.getElementById('toggleGradient');
 function loadPoints() {{
-  points = allData[currentN].map(p => [p[0], p[1], p[2], Math.abs(p[2]) <= planThickness]);
-  count.textContent = `Points affiches : ${{visiblePoints().length.toLocaleString('fr-FR')}}`;
+  points = allData.points[currentN].map(p => [p[0], p[1], p[2], Math.abs(p[2]) <= planThickness]);
+  updateCount();
   draw();
 }}
 function visiblePoints() {{
   return showPlan ? points : points.filter(p => !p[3]);
+}}
+function updateCount() {{
+  const total = allData.counts[currentN] || visiblePoints().length;
+  const affiches = visiblePoints().length;
+  count.textContent = `Points reconstruits : ${{total.toLocaleString('fr-FR')}} | affiches : ${{affiches.toLocaleString('fr-FR')}}`;
 }}
 function resize() {{ canvas.width = innerWidth * devicePixelRatio; canvas.height = innerHeight * devicePixelRatio; draw(); }}
 function rot(p) {{
@@ -181,7 +187,7 @@ function draw() {{
   }}
 }}
 if (slider) slider.addEventListener('input', e => {{ currentN = e.target.value; nValue.textContent = currentN; loadPoints(); }});
-btnPlan.addEventListener('click', () => {{ showPlan=!showPlan; btnPlan.classList.toggle('active', showPlan); btnPlan.textContent=showPlan?'Plan visible':'Plan masque'; loadPoints(); }});
+btnPlan.addEventListener('click', () => {{ showPlan=!showPlan; btnPlan.classList.toggle('active', showPlan); btnPlan.textContent=showPlan?'Plan visible':'Plan masque'; updateCount(); draw(); }});
 btnGradient.addEventListener('click', () => {{ gradient=!gradient; btnGradient.classList.toggle('active', gradient); draw(); }});
 canvas.addEventListener('mousedown', e => {{ dragging=true; lx=e.clientX; ly=e.clientY; }});
 addEventListener('mouseup', () => dragging=false);
