@@ -223,7 +223,7 @@ def generer_index() -> None:
 <body>
   <main>
     <h1>Reconstructions 3D</h1>
-    <p>Vues interactives des reconstructions finales. Souris pour tourner, molette pour zoomer, double clic pour reinitialiser la vue.</p>
+    <p>Vues interactives des reconstructions finales de notre projet PRONTO.</p>
     <div class="grid">
 {liens}
     </div>
