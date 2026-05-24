@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reconstructions 3D - Projet PRONTO</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f7f7f5;
+      color: #171717;
+      display: grid;
+      place-items: center;
+    }
+    main {
+      width: min(900px, calc(100vw - 40px));
+      padding: 34px 0;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      font-weight: 700;
+    }
+    p {
+      margin: 0 0 24px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    a {
+      display: block;
+      padding: 18px 20px;
+      border: 1px solid #d9d9d4;
+      border-radius: 8px;
+      background: #fff;
+      color: #171717;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    a span {
+      display: block;
+      margin-top: 6px;
+      color: #666;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    a:hover {
+      border-color: #111;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Reconstructions 3D</h1>
+    <p>Vues interactives du plan, de la pyramide a plat et du bras. Souris pour tourner, molette pour zoomer.</p>
+    <div class="grid">
+      <a href="plan.html">Plan<span>Reference de la reconstruction</span></a>
+      <a href="pyramide.html">Pyramide a plat<span>Objet reconstruit</span></a>
+      <a href="bras.html">Bras<span>Objet reconstruit</span></a>
+    </div>
+  </main>
+</body>
+</html>
