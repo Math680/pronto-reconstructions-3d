@@ -15,7 +15,7 @@
       place-items: center;
     }
     main {
-      width: min(900px, calc(100vw - 40px));
+      width: min(980px, calc(100vw - 40px));
       padding: 34px 0;
     }
     h1 {
@@ -30,7 +30,7 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 12px;
     }
     a {
@@ -42,6 +42,7 @@
       color: #171717;
       text-decoration: none;
       font-weight: 700;
+      min-height: 72px;
     }
     a span {
       display: block;
@@ -58,11 +59,13 @@
 <body>
   <main>
     <h1>Reconstructions 3D</h1>
-    <p>Vues interactives du plan, de la pyramide a plat et du bras. Souris pour tourner, molette pour zoomer.</p>
+    <p>Vues interactives des reconstructions finales. Souris pour tourner, molette pour zoomer, double clic pour reinitialiser la vue.</p>
     <div class="grid">
       <a href="plan.html">Plan<span>Reference de la reconstruction</span></a>
       <a href="pyramide.html">Pyramide a plat<span>Objet reconstruit</span></a>
       <a href="bras.html">Bras<span>Objet reconstruit</span></a>
+      <a href="sac-zainab.html">Sac Zainab<span>Objet reconstruit</span></a>
+      <a href="mines.html">Mines<span>Objet reconstruit</span></a>
     </div>
   </main>
 </body>
