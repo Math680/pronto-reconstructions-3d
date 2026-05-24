@@ -71,9 +71,13 @@ def sous_echantillonner(points: np.ndarray) -> np.ndarray:
     return points[idx]
 
 
+def arrondir_points(points: np.ndarray) -> list:
+    return np.round(points, 2).tolist()
+
+
 def donnees_objet(nom_objet: str, avec_slider: bool, mr: np.ndarray, me: np.ndarray) -> dict:
     max_n = 8 if avec_slider else nombre_captures_disponibles(DOSSIER_CAPTURES / nom_objet, 8)
-    donnees = {"points": {}, "counts": {}}
+    donnees = {"points": {}, "pointsTous": {}, "counts": {}}
     for n in range(1, max_n + 1):
         points_plan = reconstruire_points("plan", n, mr, me)
         centre_plan, axes_plan, _ = ajuster_plan(points_plan)
@@ -86,8 +90,8 @@ def donnees_objet(nom_objet: str, avec_slider: bool, mr: np.ndarray, me: np.ndar
             points = points[points[:, 2] >= -TOLERANCE_SOUS_PLAN_MM]
 
         donnees["counts"][str(n)] = int(len(points))
-        points = sous_echantillonner(points)
-        donnees["points"][str(n)] = np.round(points, 2).tolist()
+        donnees["pointsTous"][str(n)] = arrondir_points(points)
+        donnees["points"][str(n)] = arrondir_points(sous_echantillonner(points))
     return donnees
 
 
@@ -120,6 +124,7 @@ button.active{{background:#f2f2f2;color:#111;border-color:#f2f2f2}}
     {'<label>Captures <input id="sliderN" type="range" min="1" max="8" step="1" value="'+str(n_defaut)+'"><span id="nValue">'+str(n_defaut)+'</span></label>' if avec_slider else '<span>Captures utilisees : '+str(n_defaut)+'</span>'}
     <button id="togglePlan" class="active">Plan visible</button>
     <button id="toggleGradient" class="{'active' if gradient_defaut else ''}">Gradient profondeur</button>
+    <button id="toggleAllPoints">Tous les points</button>
     <span id="count"></span>
   </div>
 </div>
@@ -130,6 +135,7 @@ const planThickness = {EPAISSEUR_PLAN_MM};
 let currentN = defaultN;
 let showPlan = true;
 let gradient = {str(gradient_defaut).lower()};
+let showAllPoints = false;
 let points = [];
 let rx = -0.85, ry = 0.0, rz = 0.02, zoom = 0.9;
 let dragging = false, lx = 0, ly = 0;
@@ -140,8 +146,10 @@ const nValue = document.getElementById('nValue');
 const count = document.getElementById('count');
 const btnPlan = document.getElementById('togglePlan');
 const btnGradient = document.getElementById('toggleGradient');
+const btnAllPoints = document.getElementById('toggleAllPoints');
 function loadPoints() {{
-  points = allData.points[currentN].map(p => [p[0], p[1], p[2], Math.abs(p[2]) <= planThickness]);
+  const source = showAllPoints ? allData.pointsTous : allData.points;
+  points = source[currentN].map(p => [p[0], p[1], p[2], Math.abs(p[2]) <= planThickness]);
   updateCount();
   draw();
 }}
@@ -189,6 +197,7 @@ function draw() {{
 if (slider) slider.addEventListener('input', e => {{ currentN = e.target.value; nValue.textContent = currentN; loadPoints(); }});
 btnPlan.addEventListener('click', () => {{ showPlan=!showPlan; btnPlan.classList.toggle('active', showPlan); btnPlan.textContent=showPlan?'Plan visible':'Plan masque'; updateCount(); draw(); }});
 btnGradient.addEventListener('click', () => {{ gradient=!gradient; btnGradient.classList.toggle('active', gradient); draw(); }});
+btnAllPoints.addEventListener('click', () => {{ showAllPoints=!showAllPoints; btnAllPoints.classList.toggle('active', showAllPoints); loadPoints(); }});
 canvas.addEventListener('mousedown', e => {{ dragging=true; lx=e.clientX; ly=e.clientY; }});
 addEventListener('mouseup', () => dragging=false);
 addEventListener('mousemove', e => {{ if(!dragging) return; ry += (e.clientX-lx)*0.006; rx += (e.clientY-ly)*0.006; lx=e.clientX; ly=e.clientY; draw(); }});
