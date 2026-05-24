@@ -99,15 +99,15 @@ def html_vue(titre: str, donnees: dict, avec_slider: bool, gradient_defaut: bool
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{titre} - reconstruction 3D</title>
 <style>
-html,body{{margin:0;height:100%;overflow:hidden;background:#fff;color:#111;font-family:Arial,sans-serif}}
-canvas{{display:block;width:100vw;height:100vh;cursor:grab;background:#fff}}
+html,body{{margin:0;height:100%;overflow:hidden;background:#101114;color:#f2f2f2;font-family:Arial,sans-serif}}
+canvas{{display:block;width:100vw;height:100vh;cursor:grab;background:#101114}}
 canvas:active{{cursor:grabbing}}
-#hud{{position:fixed;left:14px;top:12px;background:rgba(255,255,255,.92);border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.35;box-shadow:0 2px 10px rgba(0,0,0,.08)}}
+#hud{{position:fixed;left:14px;top:12px;background:rgba(0,0,0,.58);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.35;box-shadow:0 2px 10px rgba(0,0,0,.28)}}
 #controls{{display:grid;gap:8px;margin-top:9px;min-width:260px}}
 label{{display:flex;align-items:center;gap:8px;white-space:nowrap}}
 input[type=range]{{width:160px}}
-button{{border:1px solid #bbb;background:#f8f8f8;border-radius:6px;padding:6px 8px;cursor:pointer;text-align:left}}
-button.active{{background:#111;color:#fff;border-color:#111}}
+button{{border:1px solid rgba(255,255,255,.24);background:#202226;color:#f2f2f2;border-radius:6px;padding:6px 8px;cursor:pointer;text-align:left}}
+button.active{{background:#f2f2f2;color:#111;border-color:#f2f2f2}}
 </style>
 </head>
 <body>
@@ -164,7 +164,7 @@ function color(t) {{
 }}
 function draw() {{
   const w=canvas.width, h=canvas.height;
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#101114'; ctx.fillRect(0,0,w,h);
   const pts = visiblePoints();
   if (!pts.length) return;
   const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]), zs=pts.map(p=>p[2]);
@@ -175,7 +175,7 @@ function draw() {{
   const projected=pts.map(p=>{{const q=rot([p[0]-cx,p[1]-cy,p[2]-cz]); return [w/2+q[0]*s,h/2-q[1]*s,q[2],p[2],p[3]];}}).sort((a,b)=>a[2]-b[2]);
   const px=Math.max(1.8, 2.7*devicePixelRatio);
   for (const p of projected) {{
-    if (p[4]) ctx.fillStyle = '#111';
+    if (p[4]) ctx.fillStyle = '#d8d8d8';
     else ctx.fillStyle = gradient ? color((p[3]-zMin)/(zMax-zMin || 1)) : '#1f5fbf';
     ctx.fillRect(p[0], p[1], px, px);
   }}
